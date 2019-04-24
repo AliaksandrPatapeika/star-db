@@ -40,6 +40,7 @@ export default class ItemList extends Component {
 
     const {peopleList} = this.state;
 
+    // TODO Spinner как в random planet или в person detail
     if (!peopleList) {
       return <Spinner/>
     }

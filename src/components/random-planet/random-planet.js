@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
-import Spinner from "../spinner";
-import ErrorIndicator from "../error-indicator";
+import Spinner from '../spinner';
+import ErrorIndicator from '../error-indicator';
 import SwapiService from '../../services/swapi-service';
 
 import './random-planet.css';
@@ -21,15 +21,15 @@ export default class RandomPlanet extends Component {
     // diameter: null
   };
 
-
   // компонент "подключен" (DOM элементы уже на странице)
   componentDidMount() {
     this.updatePlanet();
     this.interval = setInterval(this.updatePlanet, 5000);
-    // TODO clearInterval(this.interval);
   }
 
+  // Для очистки ресурсов (таймеры, интервалы, запросы к серверу) перед удалением компонента. В момент вызова, DOM все еще содержит компонент
   componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   onPlanetLoaded = (planet) => {

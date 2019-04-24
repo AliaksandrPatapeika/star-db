@@ -2,8 +2,10 @@ import React, {Component} from 'react';
 
 import Header from '../header';
 import RandomPlanet from '../random-planet';
+import ErrorButton from '../error-button';
 import ItemList from '../item-list';
 import PersonDetails from '../person-details';
+import ErrorIndicator from '../error-indicator';
 
 import './app.css';
 
@@ -11,7 +13,10 @@ export default class App extends Component {
 
   state = {
     showRandomPlanet: true,
-    selectedPerson: null
+    // selectedPerson: null
+    // по умолчанию выбран персонаж с id = 1
+    selectedPerson: 1,
+    error: false
   };
 
   toggleRandomPlanet = () => {
@@ -28,7 +33,21 @@ export default class App extends Component {
     });
   };
 
+  // работает для ошибок рендеринга и для ошибок жизненного цикла компонента (или ниже по иерархии). Не отлавливают
+  // ошибки в event listener'ах и в асинхронном коде (запросы к серверу и т.п.)
+  // TODO ОСТАНОВИЛСЯ ТУТ!!!!
+  componentDidCatch () {
+    console.log('componentDidCatch');
+    this.setState({
+      error: true
+    });
+  }
+
   render() {
+
+    if (this.state.error) {
+      return <ErrorIndicator />
+    }
 
     const planet = this.state.showRandomPlanet ?
         <RandomPlanet/> :
@@ -41,10 +60,13 @@ export default class App extends Component {
           {planet}
           {/*<RandomPlanet/>*/}
 
-          <button className="toggle-planet btn btn-warning btn-lg"
-                  onClick={this.toggleRandomPlanet}>
-            Toggle Random Planet
-          </button>
+          <div className="row mb2 button-row">
+            <button className="toggle-planet btn btn-warning btn-lg"
+                    onClick={this.toggleRandomPlanet}>
+              Toggle Random Planet
+            </button>
+            <ErrorButton/>
+          </div>
 
           <div className="row mb2">
             <div className="col-md-6">
