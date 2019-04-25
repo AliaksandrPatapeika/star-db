@@ -8,7 +8,7 @@ lib/
 #/coverage
 
 # production
-#/build
+build/
 
 # misc
 .idea/

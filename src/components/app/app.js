@@ -3,20 +3,22 @@ import React, {Component} from 'react';
 import Header from '../header';
 import RandomPlanet from '../random-planet';
 import ErrorButton from '../error-button';
-import ItemList from '../item-list';
-import PersonDetails from '../person-details';
+import PeoplePage from "../people-page";
 import ErrorIndicator from '../error-indicator';
+import ItemList from "../item-list";
+import ItemDetails, {Record} from "../item-details/item-details";
+import Row from "../row";
+import SwapiService from "../../services/swapi-service";
+import ErrorBoundry from "../error-boundry";
 
 import './app.css';
 
 export default class App extends Component {
 
+  swapiService = new SwapiService();
+
   state = {
-    showRandomPlanet: true,
-    // selectedPerson: null
-    // по умолчанию выбран персонаж с id = 1
-    selectedPerson: 1,
-    error: false
+    showRandomPlanet: true
   };
 
   toggleRandomPlanet = () => {
@@ -27,56 +29,121 @@ export default class App extends Component {
     });
   };
 
-  onPersonSelected = (id) => {
-    this.setState({
-      selectedPerson: id
-    });
-  };
-
-  // работает для ошибок рендеринга и для ошибок жизненного цикла компонента (или ниже по иерархии). Не отлавливают
-  // ошибки в event listener'ах и в асинхронном коде (запросы к серверу и т.п.)
-  // TODO ОСТАНОВИЛСЯ ТУТ!!!!
-  componentDidCatch () {
-    console.log('componentDidCatch');
-    this.setState({
-      error: true
-    });
-  }
 
   render() {
-
-    if (this.state.error) {
-      return <ErrorIndicator />
-    }
 
     const planet = this.state.showRandomPlanet ?
         <RandomPlanet/> :
         null;
 
+    const {
+      getPerson,
+      getStarship,
+      getPersonImage,
+      getStarshipImage,
+      getAllPeople,
+      getAllPlanets
+    } = this.swapiService;
+
+    const personDetails = (
+        <ItemDetails
+            itemId={1}
+            getData={getPerson}
+            getImageUrl={getPersonImage}>
+
+          <Record field="gender" label="Gender"/>
+          <Record field="birthYear" label="Birth Year"/>
+          <Record field="eyeColor" label="Eye Color"/>
+
+        </ItemDetails>
+    );
+
+    const starshipDetails = (
+        <ItemDetails
+            itemId={5}
+            getData={getStarship}
+            getImageUrl={getStarshipImage}>
+
+          <Record field="model" label="Model"/>
+          <Record field="manufacturer" label="Manufacturer"/>
+          <Record field="costInCredits" label="Cost"/>
+          <Record field="length" label="length"/>
+          <Record field="crew" label="Crew"/>
+          <Record field="passengers" label="Passengers"/>
+          <Record field="cargoCapacity" label="Capacity"/>
+
+        </ItemDetails>
+    );
+
 
     return (
-        <div className="stardb-app">
-          <Header/>
-          {planet}
-          {/*<RandomPlanet/>*/}
+        <ErrorBoundry>
+          <div className="stardb-app">
+            <Header/>
+            {/*{planet}*/}
+            {/*<RandomPlanet/>*/}
 
-          <div className="row mb2 button-row">
-            <button className="toggle-planet btn btn-warning btn-lg"
-                    onClick={this.toggleRandomPlanet}>
-              Toggle Random Planet
-            </button>
-            <ErrorButton/>
-          </div>
+            {/*<div className="row mb2 button-row">*/}
+            {/*  <button className="toggle-planet btn btn-warning btn-lg"*/}
+            {/*          onClick={this.toggleRandomPlanet}>*/}
+            {/*    Toggle Random Planet*/}
+            {/*  </button>*/}
+            {/*  <ErrorButton/>*/}
+            {/*</div>*/}
 
-          <div className="row mb2">
-            <div className="col-md-6">
-              <ItemList onItemSelected={this.onPersonSelected}/>
-            </div>
-            <div className="col-md-6">
-              <PersonDetails personId={this.state.selectedPerson}/>
-            </div>
+            {/*<PeoplePage/>*/}
+            {/*<PeoplePage/>*/}
+            {/*<PeoplePage/>*/}
+
+            {/*========================*/}
+            <ItemList
+                getData={getAllPeople}
+                onItemSelected={() => {}}>
+
+              { ({name}) => <span>{name}</span> }
+            </ItemList>
+
+            <ItemList
+                getData={getAllPlanets}
+                onItemSelected={() => {}}>
+
+              { ({name}) => <span>{name}</span> }
+            </ItemList>
+            {/*========================*/}
+            {/*<div className="row mb2">*/}
+            {/*  <div className="col-md-6">*/}
+            {/*    <ItemList*/}
+            {/*        onItemSelected={this.onPersonSelected}*/}
+            {/*        getData={this.swapiService.getAllPlanets}*/}
+            {/*        // renderItem={(item) => item.name}/>*/}
+            {/*        // можно передавать строки и реакт элементы*/}
+            {/*        renderItem={(item) => (*/}
+            {/*            <span>{item.name} <button>!</button></span>*/}
+            {/*        )}/>*/}
+            {/*  </div>*/}
+            {/*  <div className="col-md-6">*/}
+            {/*    <PersonDetails personId={this.state.selectedPerson}/>*/}
+            {/*  </div>*/}
+            {/*</div>*/}
+
+            {/*<div className="row mb2">*/}
+            {/*  <div className="col-md-6">*/}
+            {/*    <ItemList*/}
+            {/*        onItemSelected={this.onPersonSelected}*/}
+            {/*        getData={this.swapiService.getAllStarships}*/}
+            {/*        renderItem={(item) => item.name}/>*/}
+            {/*  </div>*/}
+            {/*  <div className="col-md-6">*/}
+            {/*    <PersonDetails personId={this.state.selectedPerson}/>*/}
+            {/*  </div>*/}
+            {/*</div>*/}
+
+            {/*<Row*/}
+            {/*    left={personDetails}*/}
+            {/*    right={starshipDetails}/>*/}
+
           </div>
-        </div>
+        </ErrorBoundry>
     );
   }
 }

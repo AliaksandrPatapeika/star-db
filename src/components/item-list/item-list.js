@@ -1,56 +1,38 @@
 import React, {Component} from 'react';
 
 import SwapiService from "../../services/swapi-service";
-import Spinner from "../spinner";
+import {withData} from '../hoc-helper';
+
 import './item-list.css';
 
-export default class ItemList extends Component {
+// Часть отвечает за отрисовку
+const ItemList = (props) => {
 
-  swapiService = new SwapiService();
+  const {data, onItemSelected, children: renderLabel} = props;
 
-  state = {
-    peopleList: null
-  };
-
-  // хорошее место получать данные
-  componentDidMount() {
-    this.swapiService
-        .getAllPeople()
-        .then((peopleList) => {
-          this.setState({
-            peopleList
-          });
-          // TODO catch error как в RandomPlanet
-        });
-  }
-
-  renderItems(arr) {
-    return arr.map(({id, name}) => {
-      return (
-          <li className="list-group-item"
-              key={id}
-              onClick={() => this.props.onItemSelected(id)}>
-            {name}
-          </li>
-      );
-    });
-  }
-
-  render() {
-
-    const {peopleList} = this.state;
-
-    // TODO Spinner как в random planet или в person detail
-    if (!peopleList) {
-      return <Spinner/>
-    }
-
-    const items = this.renderItems(peopleList);
+  const items = data.map((item) => {
+    const {id} = item;
+    // this.props.children - обращение к тому что передали в теле
+    // const label = this.props.renderItem(item);
+    const label = renderLabel(item);
 
     return (
-        <ul className="item-list list-group">
-          {items}
-        </ul>
+        <li className="list-group-item"
+            key={id}
+            onClick={() => onItemSelected(id)}>
+          {label}
+        </li>
     );
-  }
-}
+  });
+
+  return (
+      <ul className="item-list list-group">
+        {items}
+      </ul>
+  );
+
+};
+
+const {getAllPeople} = new SwapiService();
+
+export default withData(ItemList, getAllPeople);
