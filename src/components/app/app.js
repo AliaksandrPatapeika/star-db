@@ -12,6 +12,14 @@ import SwapiService from "../../services/swapi-service";
 import ErrorBoundry from "../error-boundry";
 
 import './app.css';
+import {
+  PersonList,
+  PlanetList,
+  StarshipList,
+  PersonDetails,
+  PlanetDetails,
+  StarshipDetails
+} from "../sw-components";
 
 export default class App extends Component {
 
@@ -96,19 +104,31 @@ export default class App extends Component {
             {/*<PeoplePage/>*/}
 
             {/*========================*/}
-            <ItemList
-                getData={getAllPeople}
-                onItemSelected={() => {}}>
 
-              { ({name}) => <span>{name}</span> }
-            </ItemList>
+            <PersonDetails itemId={1}/>
 
-            <ItemList
-                getData={getAllPlanets}
-                onItemSelected={() => {}}>
+            <PlanetDetails itemId={2}/>
 
-              { ({name}) => <span>{name}</span> }
-            </ItemList>
+            <StarshipDetails itemId={5}/>
+
+
+            <PersonList>
+              {({name}) => <span>{name}</span>}
+            </PersonList>
+
+            <StarshipList>
+              {({name}) => <span>{name}</span>}
+            </StarshipList>
+
+            <PlanetList>
+              {({name}) => <span>{name}</span>}
+            </PlanetList>
+            {/*<ItemList*/}
+            {/*    getData={getAllPlanets}*/}
+            {/*    onItemSelected={() => {}}>*/}
+
+            {/*  { ({name}) => <span>{name}</span> }*/}
+            {/*</ItemList>*/}
             {/*========================*/}
             {/*<div className="row mb2">*/}
             {/*  <div className="col-md-6">*/}

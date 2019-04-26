@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 
-import SwapiService from '../../services/swapi-service';
 import Spinner from '../spinner';
 import ErrorButton from '../error-button/error-button';
 import './item-details.css';
@@ -19,8 +18,6 @@ export {
 };
 
 export default class ItemDetails extends Component {
-
-  swapiService = new SwapiService();
 
   state = {
     item: null,
@@ -73,8 +70,6 @@ export default class ItemDetails extends Component {
       return;
     }
 
-    // this.swapiService
-    //     .getPerson(itemId)
     getData(itemId)
         .then(this.onItemLoaded);
     // TODO catch error как в RandomPlanet
@@ -115,7 +110,7 @@ export default class ItemDetails extends Component {
 // компонент занимается отрисовкой
 const ItemtView = ({item, image, children}) => {
 
-  const {id, name, gender, birthYear, eyeColor} = item;
+  const {name} = item;
 
   return (
       <React.Fragment>

@@ -4,6 +4,8 @@ import Spinner from "../spinner";
 import ErrorIndicator from '../error-indicator';
 
 // Часть отвечает за логику работы с сетью
+// компонент оборачивает основной компонент,
+// View любой компонент, getData - функция которая получает данные
 const withData = (View, getData) => {
   // анонимный компонент
   return class extends Component {
@@ -40,6 +42,7 @@ const withData = (View, getData) => {
         return <Spinner/>
       }
 
+      // object spread operator, работает как Object.assign, получаем новый объект со всеми свойствами из this.props
       return <View {...this.props} data={data}/>;
     }
   };
