@@ -56,7 +56,9 @@ export default class ItemDetails extends Component {
     // componentDidUpdate сработает когда persomId будет обновлен (изменится)
     // без проверки будет циклично обновляться (т.к. setState приводит к componentDidUpdate). Если будет затронут
     // setState, обязательно условие проверки какое свойство изменилось.
-    if (this.props.itemId !== prevProps.itemId) {
+    if (this.props.itemId !== prevProps.itemId ||
+        this.props.getData !== prevProps.getData ||
+        this.props.getImageUrl !== prevProps.getImageUrl) {
       this.onLoading();
       this.updateItem();
     }
@@ -81,9 +83,9 @@ export default class ItemDetails extends Component {
     const {item, image, loading} = this.state;
     const {children} = this.props;
 
-    // if (!this.state.item) {
-    //   return <span>Select a item from a list</span>;
-    // }
+    if (!this.state.item) {
+      return <span>Select a item from a list</span>;
+    }
 
     // if (!this.state.item) {
     //   return <Spinner/>

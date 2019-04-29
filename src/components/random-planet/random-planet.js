@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 
 import Spinner from '../spinner';
 import ErrorIndicator from '../error-indicator';
@@ -8,6 +9,24 @@ import './random-planet.css';
 
 // компонент занимается логикой
 export default class RandomPlanet extends Component {
+
+  static defaultProps = {
+    updateInterval: 5000
+  };
+  // проверка срабатывает после defaultProps
+  static propTypes = {
+    updateInterval: PropTypes.number
+
+    // updateInterval: (props, propName, componentName) => {
+    //   const value = props[propName];
+    //   // функция-валидатор возвращает null или объект Error
+    //   if (typeof value === 'number' && !isNaN(value)) {
+    //     return null;
+    //   }
+    //   return new TypeError(`${componentName}: ${propName} must be number`);
+    // }
+  };
+
 
   swapiService = new SwapiService();
 
@@ -23,8 +42,9 @@ export default class RandomPlanet extends Component {
 
   // компонент "подключен" (DOM элементы уже на странице)
   componentDidMount() {
+    const {updateInterval} = this.props;
     this.updatePlanet();
-    this.interval = setInterval(this.updatePlanet, 5000);
+    this.interval = setInterval(this.updatePlanet, updateInterval);
   }
 
   // Для очистки ресурсов (таймеры, интервалы, запросы к серверу) перед удалением компонента. В момент вызова, DOM все еще содержит компонент

@@ -6,18 +6,34 @@ import ErrorIndicator from '../error-indicator';
 // Часть отвечает за логику работы с сетью
 // компонент оборачивает основной компонент,
 // View любой компонент, getData - функция которая получает данные
-const withData = (View, getData) => {
+const withData = (View) => {
   // анонимный компонент
   return class extends Component {
 
     // swapiService = new SwapiService();
 
     state = {
-      data: null
+      data: null,
+      loading: true,
+      error: false
     };
+
+    componentDidUpdate(prevProps) {
+      if (this.props.getData !== prevProps.getData) {
+        this.update();
+      }
+    }
 
     // хорошее место получать данные
     componentDidMount() {
+      this.update();
+    }
+
+    update() {
+      this.setState({
+        loading: true,
+        error: false
+      });
       // вынесли получение данных наружу из компонента (компонент стал независимым от источника данных), т.к. это то что
       // отличало бы компоненты personList,
       // planetList
@@ -25,21 +41,31 @@ const withData = (View, getData) => {
 
       // this.swapiService
       //     .getAllPeople()
-      getData()
+      this.props.getData()
           .then((data) => {
             this.setState({
-              data
+              data,
+              loading: false
             });
-            // TODO catch error как в RandomPlanet
+          })
+          .catch(() => {
+            this.setState({
+              error: true,
+              loading: false
+            });
           });
     }
 
     render() {
-      const {data} = this.state;
+      const {data, loading, error} = this.state;
 
       // TODO Spinner как в random planet или в person detail
-      if (!data) {
+      if (loading) {
         return <Spinner/>
+      }
+
+      if (error) {
+        return <ErrorIndicator/>;
       }
 
       // object spread operator, работает как Object.assign, получаем новый объект со всеми свойствами из this.props
