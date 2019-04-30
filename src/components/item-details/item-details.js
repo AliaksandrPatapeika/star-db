@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 
 import Spinner from '../spinner';
 import ErrorButton from '../error-button/error-button';
+import ErrorBoundry from "../error-boundry";
 import './item-details.css';
 
 const Record = ({item, field, label}) => {
@@ -101,10 +102,12 @@ export default class ItemDetails extends Component {
 
 
     return (
-        <div className="item-details card">
-          {spinner}
-          {content}
-        </div>
+        <ErrorBoundry>
+          <div className="item-details card">
+            {spinner}
+            {content}
+          </div>
+        </ErrorBoundry>
     );
   }
 }
